@@ -1,3 +1,3 @@
-module github.com/navaz-alani/golang-dotenv
+module github.com/navaz-alani/dotenv
 
 go 1.13
