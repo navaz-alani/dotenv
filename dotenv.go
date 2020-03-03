@@ -126,6 +126,24 @@ func Load(source string, overWrite bool) (e *Env, err error) {
 }
 
 /*
+CheckRequired checks each of the requiredKeys has been defined
+in e (has a non-empty string value).
+It returns a slice of strings containing the keys which were
+specified in requiredKeys but were undefined in e.
+The caller can then decide whether the program may proceed without
+the keys in undef.
+*/
+func (e *Env) CheckRequired(requiredKeys []string) (undef []string) {
+	for _, rk := range requiredKeys {
+		if e.Get(rk) == "" {
+			undef = append(undef, rk)
+		}
+	}
+
+	return undef
+}
+
+/*
 Merge adds all of the keys and values in the given env
 into e. The overWrite parameter specifies whether keys in e
 that are also in  env should be overWritten with their values

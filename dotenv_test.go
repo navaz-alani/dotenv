@@ -1,6 +1,7 @@
 package dotenv_test
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/navaz-alani/dotenv"
@@ -91,5 +92,24 @@ func TestLoadInvalidChain(t *testing.T) {
 	_, err := dotenv.Load("tests/invalidChain.env", true)
 	if err == nil {
 		t.Fatal("Expected load error; got none", err)
+	}
+}
+
+func TestEnv_CheckRequired(t *testing.T) {
+	e, err := dotenv.Load("tests/undef.env", true)
+	if err != nil {
+		t.Fatal("Expected no error; got ", err)
+	}
+
+	req := []string{"key1", "key2", "key3", "key4"}
+	reqUndef := []string{"key1", "key2", "key4"}
+
+	undef := e.CheckRequired(req)
+	if len(undef) == 0 {
+		t.Errorf("Expected undef to have: %v; got []", req)
+	}
+
+	if !reflect.DeepEqual(reqUndef, undef) {
+		t.Errorf("Expected undef to be: %v; got %v", reqUndef, undef)
 	}
 }
